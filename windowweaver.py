@@ -37,6 +37,10 @@ def resize_active_window(modifier_key):
 
             active_window.resizeTo(new_width, new_height)
 
+def block_context_menu():
+    # Context Menuキーのデフォルトの動作をブロックする
+    keyboard.block_key('menu')
+
 def check_keys(stop_event, modifier_key):
     while not stop_event.is_set():
         if keyboard.is_pressed(modifier_key) and not keyboard.is_pressed('shift'):
@@ -52,6 +56,10 @@ args = parser.parse_args()
 
 # 選択された修飾キー
 modifier_key = 'alt' if args.key == 'alt' else 'menu'
+
+# Context Menuキーが修飾キーとして選択された場合、その本来の機能をブロック
+if modifier_key == 'menu':
+    block_context_menu()
 
 # 終了のためのスレッド停止イベント
 stop_event = threading.Event()
