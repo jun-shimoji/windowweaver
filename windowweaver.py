@@ -11,7 +11,7 @@ def move_active_window(modifier_key):
         initial_x, initial_y = pyautogui.position()  # 修飾キーを押した時のカーソル位置を取得
         initial_window_x, initial_window_y = active_window.left, active_window.top
 
-        while keyboard.is_pressed(modifier_key) and not keyboard.is_pressed('shift'):
+        while keyboard.is_pressed(modifier_key) and not keyboard.is_pressed('right shift'):
             current_x, current_y = pyautogui.position()  # 現在のカーソル位置を取得
             dx = current_x - initial_x
             dy = current_y - initial_y
@@ -23,10 +23,10 @@ def resize_active_window(modifier_key):
     active_window = gw.getActiveWindow()  # 現在アクティブなウィンドウを取得
 
     if active_window:
-        initial_x, initial_y = pyautogui.position()  # 修飾キー＋Shiftキーを押した時のカーソル位置を取得
+        initial_x, initial_y = pyautogui.position()  # 修飾キー＋右Shiftキーを押した時のカーソル位置を取得
         initial_width, initial_height = active_window.width, active_window.height
 
-        while keyboard.is_pressed(modifier_key) and keyboard.is_pressed('shift'):
+        while keyboard.is_pressed(modifier_key) and keyboard.is_pressed('right shift'):
             current_x, current_y = pyautogui.position()  # 現在のカーソル位置を取得
             dx = current_x - initial_x
             dy = current_y - initial_y
@@ -43,9 +43,9 @@ def block_context_menu():
 
 def check_keys(stop_event, modifier_key):
     while not stop_event.is_set():
-        if keyboard.is_pressed(modifier_key) and not keyboard.is_pressed('shift'):
+        if keyboard.is_pressed(modifier_key) and not keyboard.is_pressed('right shift'):
             move_active_window(modifier_key)
-        elif keyboard.is_pressed(modifier_key) and keyboard.is_pressed('shift'):
+        elif keyboard.is_pressed(modifier_key) and keyboard.is_pressed('right shift'):
             resize_active_window(modifier_key)
 
 # コマンドライン引数を処理
