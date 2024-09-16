@@ -2,74 +2,90 @@ import pyautogui
 import keyboard
 import pygetwindow as gw
 import threading
-import argparse
+import time
 
-def move_active_window(modifier_key):
+def move_active_window():
     active_window = gw.getActiveWindow()  # 現在アクティブなウィンドウを取得
-
     if active_window:
-        initial_x, initial_y = pyautogui.position()  # 修飾キーを押した時のカーソル位置を取得
+        initial_x, initial_y = pyautogui.position()  # Shiftキーを押した時のカーソル位置を取得
         initial_window_x, initial_window_y = active_window.left, active_window.top
 
-        while keyboard.is_pressed(modifier_key) and not keyboard.is_pressed('right shift'):
+        while keyboard.is_pressed('shift') and not (keyboard.is_pressed('alt') or keyboard.is_pressed('menu')):
             current_x, current_y = pyautogui.position()  # 現在のカーソル位置を取得
             dx = current_x - initial_x
             dy = current_y - initial_y
 
-            # ウィンドウの位置を更新
-            active_window.moveTo(initial_window_x + dx, initial_window_y + dy)
+            # マウスが動いた時だけウィンドウを更新
+            if dx != 0 or dy != 0:
+                new_window_x = initial_window_x + dx
+                new_window_y = initial_window_y + dy
+                active_window.moveTo(new_window_x, new_window_y)
+                initial_x, initial_y = current_x, current_y
+                initial_window_x, initial_window_y = new_window_x, new_window_y
 
-def resize_active_window(modifier_key):
+            time.sleep(0.05)
+
+def resize_active_window():
     active_window = gw.getActiveWindow()  # 現在アクティブなウィンドウを取得
-
     if active_window:
-        initial_x, initial_y = pyautogui.position()  # 修飾キー＋右Shiftキーを押した時のカーソル位置を取得
+        initial_x, initial_y = pyautogui.position()  # Shiftキー＋AltまたはContextキーを押した時のカーソル位置を取得
         initial_width, initial_height = active_window.width, active_window.height
 
-        while keyboard.is_pressed(modifier_key) and keyboard.is_pressed('right shift'):
+        while keyboard.is_pressed('shift') and (keyboard.is_pressed('alt') or keyboard.is_pressed('menu')):
             current_x, current_y = pyautogui.position()  # 現在のカーソル位置を取得
             dx = current_x - initial_x
             dy = current_y - initial_y
 
-            # ウィンドウのサイズを更新
-            new_width = max(100, initial_width + dx)  # 最小幅100ピクセルに制限
-            new_height = max(100, initial_height + dy)  # 最小高さ100ピクセルに制限
+            # マウスが動いた時だけウィンドウのサイズを更新
+            if dx != 0 or dy != 0:
+                new_width = max(100, initial_width + dx)  # 最小幅100ピクセルに制限
+                new_height = max(100, initial_height + dy)  # 最小高さ100ピクセルに制限
+                active_window.resizeTo(new_width, new_height)
 
-            active_window.resizeTo(new_width, new_height)
+            time.sleep(0.05)
 
-def block_context_menu():
-    # Context Menuキーのデフォルトの動作をブロックする
-    keyboard.block_key('menu')
+def drag_with_context_key():
+    # Context MenuキーまたはAltキーが押されたらドラッグ操作を開始
+    if keyboard.is_pressed('menu') or keyboard.is_pressed('alt'):
+        initial_x, initial_y = pyautogui.position()  # 初期マウス位置を取得
+        print(f"Dragging started at ({initial_x}, {initial_y})")
 
-def check_keys(stop_event, modifier_key):
+        pyautogui.mouseDown(button='left')  # 左クリックを押した状態にする
+
+        while keyboard.is_pressed('menu') or keyboard.is_pressed('alt'):
+            current_x, current_y = pyautogui.position()  # 現在のマウス位置を取得
+            dx = current_x - initial_x
+            dy = current_y - initial_y
+
+            if dx != 0 or dy != 0:
+                pyautogui.moveTo(current_x, current_y)  # マウスを移動
+                initial_x, initial_y = current_x, current_y  # 新しい初期位置を更新
+
+            time.sleep(0.01)  # 負荷を軽減するためにスリープ
+
+        pyautogui.mouseUp(button='left')  # 左クリックを離す
+        print("Dragging stopped.")
+
+def check_keys(stop_event):
     while not stop_event.is_set():
-        if keyboard.is_pressed(modifier_key) and not keyboard.is_pressed('right shift'):
-            move_active_window(modifier_key)
-        elif keyboard.is_pressed(modifier_key) and keyboard.is_pressed('right shift'):
-            resize_active_window(modifier_key)
-
-# コマンドライン引数を処理
-parser = argparse.ArgumentParser(description='Choose the modifier key to move or resize windows.')
-parser.add_argument('--key', choices=['alt', 'context'], default='context',
-                    help='Choose the modifier key: "alt" for Alt key, "context" for Context Menu key (default).')
-args = parser.parse_args()
-
-# 選択された修飾キー
-modifier_key = 'alt' if args.key == 'alt' else 'menu'
-
-# Context Menuキーが修飾キーとして選択された場合、その本来の機能をブロック
-if modifier_key == 'menu':
-    block_context_menu()
+        if keyboard.is_pressed('shift') and not (keyboard.is_pressed('alt') or keyboard.is_pressed('menu')):
+            move_active_window()  # Shiftキーのみでウィンドウ移動
+        elif keyboard.is_pressed('shift') and (keyboard.is_pressed('alt') or keyboard.is_pressed('menu')):
+            resize_active_window()  # Shiftキー+Alt/Contextキーでウィンドウリサイズ
+        elif keyboard.is_pressed('menu') or keyboard.is_pressed('alt'):
+            drag_with_context_key()  # ContextキーまたはAltキーでドラッグ操作
 
 # 終了のためのスレッド停止イベント
 stop_event = threading.Event()
 
 # キー状態を監視するスレッドを開始
-thread = threading.Thread(target=check_keys, args=(stop_event, modifier_key))
+thread = threading.Thread(target=check_keys, args=(stop_event,))
 thread.start()
 
 try:
-    keyboard.wait('esc')  # Escキーを押すまで待機
+    # スクリプトの動作を継続し、手動終了するまで待機
+    while True:
+        time.sleep(1)  # 無限ループで1秒ごとに処理を継続
 finally:
     stop_event.set()  # スレッドを停止させる
     thread.join()     # スレッドの終了を待つ
