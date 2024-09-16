@@ -48,7 +48,7 @@ def drag_with_context_key():
     # Context MenuキーまたはAltキーが押されたらドラッグ操作を開始
     if keyboard.is_pressed('menu') or keyboard.is_pressed('alt'):
         initial_x, initial_y = pyautogui.position()  # 初期マウス位置を取得
-        print(f"Dragging started at ({initial_x}, {initial_y})")
+        # print(f"Dragging started at ({initial_x}, {initial_y})")
 
         pyautogui.mouseDown(button='left')  # 左クリックを押した状態にする
 
@@ -64,7 +64,7 @@ def drag_with_context_key():
             time.sleep(0.01)  # 負荷を軽減するためにスリープ
 
         pyautogui.mouseUp(button='left')  # 左クリックを離す
-        print("Dragging stopped.")
+        # print("Dragging stopped.")
 
 def check_keys(stop_event):
     while not stop_event.is_set():
@@ -89,4 +89,3 @@ try:
 finally:
     stop_event.set()  # スレッドを停止させる
     thread.join()     # スレッドの終了を待つ
-    print("スクリプトを終了しました。")
