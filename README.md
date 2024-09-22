@@ -1,12 +1,12 @@
 # WindowWeaver
 
-WindowWeaver is a lightweight tool that allows you to easily move, resize, and drag windows on Windows using keyboard shortcuts. You can choose to use either the Alt key or the Context Menu key as the modifier key for these actions.
+WindowWeaver is a lightweight tool designed to enhance window management on Windows. It allows users to move, resize, and drag windows with simple keyboard shortcuts, utilizing the **Shift** and **Context Menu** keys. The **Alt** key is no longer used in this version.
 
 ## Features
 
 - **Move Windows**: Press and hold the **Shift key** and move the mouse to drag the active window.
-- **Resize Windows**: Press and hold the **Shift key** and **Context Menu key** (or **Alt key**) to resize the active window by moving the mouse.
-- **Drag Function**: Press and hold the **Context Menu key** (or **Alt key**) and move the mouse to simulate a left-click drag operation.
+- **Resize Windows**: Press and hold the **Shift key** and the **Context Menu key** to resize the active window by moving the mouse.
+- **Drag Function**: Press and hold the **Context Menu key** and move the mouse to simulate a left-click drag operation.
 
 ## Installation
 
@@ -33,7 +33,7 @@ Navigate to the project directory and install the dependencies:
 
 3. Run WindowWeaver
 
-You can also simply run the script without any arguments:
+You can run the script without any arguments:
 
    ```bash
    python windowweaver.py
@@ -41,14 +41,15 @@ You can also simply run the script without any arguments:
 
 ## Usage
 * Move Windows: Press and hold the Shift key and move your mouse to drag the active window.
-* Resize Windows: Press and hold the Shift key and the Context Menu key (or Alt key) and move your mouse to resize the active window.
-* Drag Function: Press and hold the Context Menu key (or Alt key) and move your mouse to simulate a left-click drag operation.
+* Resize Windows: Press and hold the Shift key and the Context Menu key and move your mouse to resize the active window.
+* Drag Function: Press and hold the Context Menu key and move your mouse to simulate a left-click drag operation.
+
+Note: The Alt key functionality has been completely removed in this version. All actions are now controlled using the Shift and Context Menu keys.
 
 ## Virtual Environment (Optional)
 For users who prefer to keep their project dependencies isolated, it's recommended to create a virtual environment. This is not required but can be helpful for managing dependencies.
 
-1. Create a Virtual Environment
-Navigate to your project directory:
+Create a Virtual Environment Navigate to your project directory:
 
    ```bash
    cd WindowWeaver

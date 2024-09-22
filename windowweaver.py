@@ -4,13 +4,16 @@ import pygetwindow as gw
 import threading
 import time
 
+# Contextキーの機能を無効化
+keyboard.block_key('menu')
+
 def move_active_window():
     active_window = gw.getActiveWindow()  # 現在アクティブなウィンドウを取得
     if active_window:
         initial_x, initial_y = pyautogui.position()  # Shiftキーを押した時のカーソル位置を取得
         initial_window_x, initial_window_y = active_window.left, active_window.top
 
-        while keyboard.is_pressed('shift') and not (keyboard.is_pressed('alt') or keyboard.is_pressed('menu')):
+        while keyboard.is_pressed('shift') and not keyboard.is_pressed('menu'):
             current_x, current_y = pyautogui.position()  # 現在のカーソル位置を取得
             dx = current_x - initial_x
             dy = current_y - initial_y
@@ -23,15 +26,15 @@ def move_active_window():
                 initial_x, initial_y = current_x, current_y
                 initial_window_x, initial_window_y = new_window_x, new_window_y
 
-            time.sleep(0.05)
+            time.sleep(0.1)  # スリープ時間を少し長くしてCPU負荷を軽減
 
 def resize_active_window():
     active_window = gw.getActiveWindow()  # 現在アクティブなウィンドウを取得
     if active_window:
-        initial_x, initial_y = pyautogui.position()  # Shiftキー＋AltまたはContextキーを押した時のカーソル位置を取得
+        initial_x, initial_y = pyautogui.position()  # Shiftキー＋Contextキーを押した時のカーソル位置を取得
         initial_width, initial_height = active_window.width, active_window.height
 
-        while keyboard.is_pressed('shift') and (keyboard.is_pressed('alt') or keyboard.is_pressed('menu')):
+        while keyboard.is_pressed('shift') and keyboard.is_pressed('menu'):
             current_x, current_y = pyautogui.position()  # 現在のカーソル位置を取得
             dx = current_x - initial_x
             dy = current_y - initial_y
@@ -42,17 +45,16 @@ def resize_active_window():
                 new_height = max(100, initial_height + dy)  # 最小高さ100ピクセルに制限
                 active_window.resizeTo(new_width, new_height)
 
-            time.sleep(0.05)
+            time.sleep(0.1)  # スリープ時間を調整してCPU負荷を軽減
 
 def drag_with_context_key():
-    # Context MenuキーまたはAltキーが押されたらドラッグ操作を開始
-    if keyboard.is_pressed('menu') or keyboard.is_pressed('alt'):
+    # Context Menuキーが押されたらドラッグ操作を開始
+    if keyboard.is_pressed('menu'):
         initial_x, initial_y = pyautogui.position()  # 初期マウス位置を取得
-        # print(f"Dragging started at ({initial_x}, {initial_y})")
 
         pyautogui.mouseDown(button='left')  # 左クリックを押した状態にする
 
-        while keyboard.is_pressed('menu') or keyboard.is_pressed('alt'):
+        while keyboard.is_pressed('menu'):
             current_x, current_y = pyautogui.position()  # 現在のマウス位置を取得
             dx = current_x - initial_x
             dy = current_y - initial_y
@@ -61,19 +63,19 @@ def drag_with_context_key():
                 pyautogui.moveTo(current_x, current_y)  # マウスを移動
                 initial_x, initial_y = current_x, current_y  # 新しい初期位置を更新
 
-            time.sleep(0.01)  # 負荷を軽減するためにスリープ
+            time.sleep(0.05)  # スリープ時間を少し長く設定
 
         pyautogui.mouseUp(button='left')  # 左クリックを離す
-        # print("Dragging stopped.")
 
 def check_keys(stop_event):
     while not stop_event.is_set():
-        if keyboard.is_pressed('shift') and not (keyboard.is_pressed('alt') or keyboard.is_pressed('menu')):
+        if keyboard.is_pressed('shift') and not keyboard.is_pressed('menu'):
             move_active_window()  # Shiftキーのみでウィンドウ移動
-        elif keyboard.is_pressed('shift') and (keyboard.is_pressed('alt') or keyboard.is_pressed('menu')):
-            resize_active_window()  # Shiftキー+Alt/Contextキーでウィンドウリサイズ
-        elif keyboard.is_pressed('menu') or keyboard.is_pressed('alt'):
-            drag_with_context_key()  # ContextキーまたはAltキーでドラッグ操作
+        elif keyboard.is_pressed('shift') and keyboard.is_pressed('menu'):
+            resize_active_window()  # Shiftキー+Contextキーでウィンドウリサイズ
+        elif keyboard.is_pressed('menu'):
+            drag_with_context_key()  # Contextキーでドラッグ操作
+        time.sleep(0.05)  # メインループに少しスリープを追加して負荷軽減
 
 # 終了のためのスレッド停止イベント
 stop_event = threading.Event()
