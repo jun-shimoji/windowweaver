@@ -1,11 +1,11 @@
 # WindowWeaver
 
-WindowWeaver is a lightweight tool designed to enhance window management on Windows. It allows users to move, resize, and drag windows with simple keyboard shortcuts, utilizing the **Shift** and **Context Menu** keys. The **Alt** key is no longer used in this version.
+WindowWeaver is a lightweight tool designed to enhance window management on Windows. It allows users to move, resize, and drag windows with simple keyboard shortcuts, utilizing the **Right Shift** and **Context Menu** keys. The **Alt** key is no longer used in this version.
 
 ## Features
 
-- **Move Windows**: Press and hold the **Shift key** and move the mouse to drag the active window.
-- **Resize Windows**: Press and hold the **Shift key** and the **Context Menu key** to resize the active window by moving the mouse.
+- **Move Windows**: Press and hold the **Right Shift key** and move the mouse to drag the active window.
+- **Resize Windows**: Press and hold the **Right Shift key** and the **Context Menu key** to resize the active window by moving the mouse.
 - **Drag Function**: Press and hold the **Context Menu key** and move the mouse to simulate a left-click drag operation.
 
 ## Installation
@@ -40,8 +40,8 @@ You can run the script without any arguments:
    ```
 
 ## Usage
-* Move Windows: Press and hold the Shift key and move your mouse to drag the active window.
-* Resize Windows: Press and hold the Shift key and the Context Menu key and move your mouse to resize the active window.
+* Move Windows: Press and hold the Right Shift key and move your mouse to drag the active window.
+* Resize Windows: Press and hold the Right Shift key and the Context Menu key and move your mouse to resize the active window.
 * Drag Function: Press and hold the Context Menu key and move your mouse to simulate a left-click drag operation.
 
 Note: The Alt key functionality has been completely removed in this version. All actions are now controlled using the Shift and Context Menu keys.

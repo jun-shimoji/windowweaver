@@ -10,10 +10,10 @@ keyboard.block_key('menu')
 def move_active_window():
     active_window = gw.getActiveWindow()  # 現在アクティブなウィンドウを取得
     if active_window:
-        initial_x, initial_y = pyautogui.position()  # Shiftキーを押した時のカーソル位置を取得
+        initial_x, initial_y = pyautogui.position()  # 右Shiftキーを押した時のカーソル位置を取得
         initial_window_x, initial_window_y = active_window.left, active_window.top
 
-        while keyboard.is_pressed('shift') and not keyboard.is_pressed('menu'):
+        while keyboard.is_pressed('right shift') and not keyboard.is_pressed('menu'):
             current_x, current_y = pyautogui.position()  # 現在のカーソル位置を取得
             dx = current_x - initial_x
             dy = current_y - initial_y
@@ -26,15 +26,15 @@ def move_active_window():
                 initial_x, initial_y = current_x, current_y
                 initial_window_x, initial_window_y = new_window_x, new_window_y
 
-            time.sleep(0.1)  # スリープ時間を少し長くしてCPU負荷を軽減
+            time.sleep(0.1)  # スリープ時間を調整してCPU負荷を軽減
 
 def resize_active_window():
     active_window = gw.getActiveWindow()  # 現在アクティブなウィンドウを取得
     if active_window:
-        initial_x, initial_y = pyautogui.position()  # Shiftキー＋Contextキーを押した時のカーソル位置を取得
+        initial_x, initial_y = pyautogui.position()  # 右Shiftキー＋Contextキーを押した時のカーソル位置を取得
         initial_width, initial_height = active_window.width, active_window.height
 
-        while keyboard.is_pressed('shift') and keyboard.is_pressed('menu'):
+        while keyboard.is_pressed('right shift') and keyboard.is_pressed('menu'):
             current_x, current_y = pyautogui.position()  # 現在のカーソル位置を取得
             dx = current_x - initial_x
             dy = current_y - initial_y
@@ -69,10 +69,10 @@ def drag_with_context_key():
 
 def check_keys(stop_event):
     while not stop_event.is_set():
-        if keyboard.is_pressed('shift') and not keyboard.is_pressed('menu'):
-            move_active_window()  # Shiftキーのみでウィンドウ移動
-        elif keyboard.is_pressed('shift') and keyboard.is_pressed('menu'):
-            resize_active_window()  # Shiftキー+Contextキーでウィンドウリサイズ
+        if keyboard.is_pressed('right shift') and not keyboard.is_pressed('menu'):
+            move_active_window()  # 右Shiftキーのみでウィンドウ移動
+        elif keyboard.is_pressed('right shift') and keyboard.is_pressed('menu'):
+            resize_active_window()  # 右Shiftキー+Contextキーでウィンドウリサイズ
         elif keyboard.is_pressed('menu'):
             drag_with_context_key()  # Contextキーでドラッグ操作
         time.sleep(0.05)  # メインループに少しスリープを追加して負荷軽減
